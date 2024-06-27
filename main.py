@@ -6,19 +6,24 @@ from map import *
 
 
 p1 = agent()
-p2 = agent(5,0.0,60.0,0.0)
+p2 = agent(1.2,0.0,60.0)
+p3 = agent(1.5, 100.0,60.0)
 
-list_agents = [p1,p2]
+list_agents = [p1,p2,p3]
 
-p1.print_agent()
-p2.print_agent()
+list_food = generate_food( n = 20)
 
-list_food = generate_food( n = 9)
+frame_agents,frame_food = create_fig(list_agents,list_food)
 
-frame = create_fig(list_agents,list_food)
+agents_moving = 1
+while agents_moving != 0:
 
-for i in range(100):
     plt.pause(0.1)
-    move_all(list_agents,delta_time=0.1)
-    update_fig(list_agents,frame)
+    agents_moving = move_all(list_agents, list_food, delta_time=0.1)
+    update_fig(list_agents,list_food,frame_agents,frame_food)
+
 plt.show()
+
+for i,p in enumerate(list_agents):
+    print(f"Agent number {i}")
+    p.print_agent()
