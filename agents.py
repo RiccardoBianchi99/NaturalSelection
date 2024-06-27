@@ -3,7 +3,7 @@ import random as rd
 import math
 from map import *
 
-class agent:
+class agent_class:
     energy = 500.0 # energy of each agent is fixed
     curvature = 0.05 # rotation of the random movement
     state = "Search"
@@ -12,7 +12,7 @@ class agent:
     food_seen = [] # change into a pointer !!!
     direction = 0.0
 
-    def __init__(self, speed = 1.0, x = 50.0, y = 0.0,size = 1.0, view = 1.0):
+    def __init__(self, speed = 1.0, x = 50.0, y = 0.0, size = 1.0, view = 1.0):
         self.speed = float(speed) # speed of this particular agent
         self.size = size
         self.view = view
@@ -64,10 +64,10 @@ class agent:
     def is_food_close(self, list_food):
         if self.state == "Search" or self.state == "Found":
             for i,food in enumerate(list_food):
-                if compute_distance(self,food) < self.view * 5:
+                if compute_distance_food(self,food) < self.view * 5:
                     self.state = "Found"
                     self.food_seen = food
-                    if compute_distance(self,food) < 1.0:
+                    if compute_distance_food(self,food) < 1.0:
                         self.state = "Search"
                         list_food.remove(self.food_seen)
                         self.food_seen = []
@@ -78,7 +78,7 @@ class agent:
                     self.state = "Search"
                     self.food_seen = []
 
-    def decide(self):
+    def decide_state(self):
         if self.state == "Wait":
             return
 
@@ -93,12 +93,59 @@ class agent:
         elif self.food_count == 1 and self.energy < 100 and self.state != "Found": # cambiare con una condizione migliore sull'energia
             self.state = "Home"
 
-        
-
     def print_agent(self):
         print(f"Velocity = {self.speed};\nPosition = [{self.x_position},{self.y_position}]")
         print(f"Food count: {self.food_count}")  
         print(f"State: {self.state} \n")
 
-    def reduce_energy(self):
+    def update_energy(self):
         self.energy -= self.size * self.speed + self.view
+
+def create_new_agent(speed = 1, size = 1, view = 1):
+    coin_flip = rd.uniform(0,1)
+    if coin_flip < 1/4:
+        new_agent = agent_class(speed = speed, x = rd.uniform(0.01,99.9), y = 100.0, size = size, view = view)
+    elif coin_flip < 2/4:
+        new_agent = agent_class(speed = speed, x = 100.0, y = rd.uniform(0.01,99.9), size = size, view = view)
+    elif coin_flip < 3/4:
+        new_agent = agent_class(speed = speed, x = rd.uniform(0.01,99.9), y = 0.0, size = size, view = view)
+    else:
+        new_agent = agent_class(speed = speed, x = 0.0, y = rd.uniform(0.01,99.9), size = size, view = view)
+
+    return new_agent
+
+def create_list_agents(n = 10):
+    list_agents = []
+    for i in range(n):
+        list_agents.append(create_new_agent())
+
+    return list_agents
+
+def duplicate_agent_with_mutations(speed, size, view, speed_mutation = True, size_mutation = False, view_mutation = False):
+
+    if speed_mutation:
+        speed_variation = rd.unifrom(-0.2, 0.2)
+    else:
+        speed_variation = 0
+
+    if size_mutation:
+        size_variation = rd.unifrom(-0.2, 0.2)
+    else:
+        size_variation = 0
+    
+    if view_mutation:
+        view_variation = rd.unifrom(-0.2, 0.2)
+    else:
+        view_variation = 0
+
+    coin_flip = rd.uniform(0,1)
+    if coin_flip < 1/4:
+        new_agent = agent_class(speed = speed + speed_variation, x = rd.uniform(0.01,99.9), y = 100.0, size = size + size_variation, view = view + view_variation)
+    elif coin_flip < 2/4:
+        new_agent = agent_class(speed = speed + speed_variation, x = 100.0, y = rd.uniform(0.01,99.9), size = size + size_variation, view = view + view_variation)
+    elif coin_flip < 3/4:
+        new_agent = agent_class(speed = speed + speed_variation, x = rd.uniform(0.01,99.9), y = 0.0, size = size + size_variation, view = view + view_variation)
+    else:
+        new_agent = agent_class(speed = speed + speed_variation, x=0.0, y = rd.uniform(0.01,99.9), size = size + size_variation, view = view + view_variation)
+    
+    return new_agent
