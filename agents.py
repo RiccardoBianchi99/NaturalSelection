@@ -9,7 +9,7 @@ class agent_class:
     state = "Search"
     orientation = 0
     food_count = 0
-    food_seen = [] # change into a pointer !!!
+    food_seen = [] 
     direction = 0.0
 
     def __init__(self, speed = 1.0, x = 50.0, y = 0.0, size = 1.0, view = 1.0):
@@ -94,12 +94,16 @@ class agent_class:
             self.state = "Home"
 
     def print_agent(self):
-        print(f"Velocity = {self.speed};\nPosition = [{self.x_position},{self.y_position}]")
-        print(f"Food count: {self.food_count}")  
-        print(f"State: {self.state} \n")
+        print(f"Speed: {self.speed}; Size: {self.size}; View range: {self.view}")
 
     def update_energy(self):
         self.energy -= self.size * self.speed + self.view
+
+def compute_avg_speed(list_agents):
+    total = 0
+    for agent in list_agents:
+        total += agent.speed
+    return total/len(list_agents)
 
 def create_new_agent(speed = 1, size = 1, view = 1):
     coin_flip = rd.uniform(0,1)
@@ -124,17 +128,17 @@ def create_list_agents(n = 10):
 def duplicate_agent_with_mutations(speed, size, view, speed_mutation = True, size_mutation = False, view_mutation = False):
 
     if speed_mutation:
-        speed_variation = rd.unifrom(-0.2, 0.2)
+        speed_variation = rd.uniform(-0.2, 0.2)
     else:
         speed_variation = 0
 
     if size_mutation:
-        size_variation = rd.unifrom(-0.2, 0.2)
+        size_variation = rd.uniform(-0.2, 0.2)
     else:
         size_variation = 0
     
     if view_mutation:
-        view_variation = rd.unifrom(-0.2, 0.2)
+        view_variation = rd.uniform(-0.2, 0.2)
     else:
         view_variation = 0
 
@@ -149,3 +153,29 @@ def duplicate_agent_with_mutations(speed, size, view, speed_mutation = True, siz
         new_agent = agent_class(speed = speed + speed_variation, x=0.0, y = rd.uniform(0.01,99.9), size = size + size_variation, view = view + view_variation)
     
     return new_agent
+
+def clear_stage(list_agents, speed_mutation = False, size_mutation = False, view_mutation = False):
+    
+    list_cloned_agents = []
+    list_deleted_agents = []
+    for agent in list_agents:
+        if agent.state == "Dead":
+            list_deleted_agents.append(agent)
+            continue 
+        if agent.state == "Wait" :
+            agent.state = "Search"
+            agent.energy = 500
+            agent.food_seen = []
+            if agent.food_count > 1:
+                list_cloned_agents.append(duplicate_agent_with_mutations(agent.speed, agent.size, agent.view, speed_mutation = speed_mutation, size_mutation = size_mutation, view_mutation = view_mutation))     
+            agent.food_count = 0
+        else:
+            print(f"Error: An agent is in the state {agent.state}")
+    
+    if list_deleted_agents != []:
+        for agent in list_deleted_agents:
+            list_agents.remove(agent)
+    print(f"The total popolation is: {len(list_agents)+len(list_cloned_agents)}")
+    new_list = list_agents + list_cloned_agents
+    
+    return new_list

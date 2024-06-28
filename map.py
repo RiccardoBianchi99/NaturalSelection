@@ -20,7 +20,7 @@ def food_coordinates_from_list(list_food):
         y.append(food.y)
     return x,y
  
-def create_figure(list_agents,list_food,xlim=100,ylim=100):
+def create_figure(list_agents,list_food, title, xlim=100,ylim=100):
     fig, ax = plt.subplots()
     x,y = agents_coordinates_from_list(list_agents)
     points_agents, = ax.plot(x, y, marker='o', linestyle='None')
@@ -28,6 +28,7 @@ def create_figure(list_agents,list_food,xlim=100,ylim=100):
     points_food, =  ax.plot(x,y,marker = 'o', color = "green",linestyle = 'None')
     ax.set_xlim(0, xlim) 
     ax.set_ylim(0, ylim) 
+    ax.set_title(f"Avg speed: {title}")
     return points_agents, points_food
 
 def update_figure(list_agents,list_food,points_agents,points_food):
@@ -82,26 +83,10 @@ def generate_food(n = 10):
         food_list.append(new_food)
     return food_list
 
-def clear_stage(list_agents, speed_mutation = False, size_mutation = False, view_mutation = False):
-    
-    list_cloned_agents = []
-    
-    for agent in list_agents:
-        if agent.state == "Dead":
-            list_agents.remove(agent)
-        elif agent.state == "Wait" and agent.food_count > 1:
-            list_cloned_agents.append(duplicate_agent_with_mutations(agent.speed, agent.size, agent.view, speed_mutation = speed_mutation, size_mutation = size_mutation, view_mutation = view_mutation))
-        else:
-            print(f"Error: An agent is in the state {agent.state}")
-    
-    new_list = list_agents + list_cloned_agents
-    
-    return new_list
-
-        
-
 if __name__ == "__main__":
-    vec = [1,2,3,4,5,0.2]
-    vec2 = [1,2]
-    vec = vec +vec2
-    print(vec)
+    vec = [1,2,2,3,4,5,0.2]
+    vec2 = [1,2,2,2,2,2,2]
+    vec3 = np.ones(7)
+    plt.plot(vec,vec2)
+    plt.plot(vec,vec3)
+    plt.show()
