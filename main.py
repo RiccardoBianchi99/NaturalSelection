@@ -33,7 +33,7 @@ for i in range(20):
 x_axis = [i for i in range(len(number_of_agents_chronology))]
 
 fig, axs = plt.subplots(1,2)
-fig.suptitle('Vertically stacked subplots')
+fig.suptitle('Behaviour of the population and avg speed')
 axs[0].plot(x_axis,number_of_agents_chronology)
 axs[1].plot(x_axis,avg_speed_chronology)
 plt.show()
