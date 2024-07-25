@@ -1,3 +1,19 @@
+# import matplotlib.pyplot as plt
+# import matplotlib.animation as animation
+
+# fig, ax = plt.subplots()
+# agent_pos = [0]
+
+# def update(frame):
+#     agent_pos[0] += 1
+#     ax.clear()
+#     ax.plot(agent_pos[0], 0, 'ro')
+#     ax.set_xlim(0, 100)
+#     ax.set_ylim(-1, 1)
+
+# ani = animation.FuncAnimation(fig, update, frames=range(100), repeat=False)
+# plt.show()
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -42,4 +58,3 @@ plt.show()
 # for i,p in enumerate(list_agents):
 #     print(f"Agent number {i}")
 #     p.print_agent()
-
