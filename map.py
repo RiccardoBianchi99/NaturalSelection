@@ -6,9 +6,9 @@ from agents import *
 
 # Food object that can be improved in the future
 class food_class:
-    def __init__(self, min = 10, max = 90):
-        self.x = rd.uniform(min,max)
-        self.y = rd.uniform(min,max)
+    def __init__(self, xlim = 100, ylim = 100):
+        self.x = rd.uniform(5, xlim - 5)
+        self.y = rd.uniform(5, ylim - 5)
 
 # Distance between an agent and a piece of food
 def compute_distance_food(a, f):
@@ -41,12 +41,13 @@ def update_figure(list_agents,list_food,points_agents,points_food):
 def move_all_agents(list_agents, list_food, delta_time=0.1, step_size = 10):
     count_agents_moving = 0
     for a in list_agents:
+        
         # agents make their move
-        count_agents_moving += a.step(delta_time,step_size)
+        count_agents_moving += a.step(list_agents,delta_time,step_size)
         
         # they check if the food is close to them
-        a.look_around(list_food)
-        a.eat(list_food)
+        a.look_around(list_agents,list_food)
+        a.eat(list_agents,list_food)
         # they decide what to do based on this information
         a.decide_state()
 
@@ -71,10 +72,10 @@ def food_coordinates_from_list(list_food):
     return x,y
 
 # create the food fot the new day
-def generate_food(n = 10):
+def generate_food(n = 10, xlim = 100.0, ylim = 100.0):
     food_list = []
     for i in range(n):
-        new_food = food_class()
+        new_food = food_class(xlim = xlim, ylim = ylim)
         food_list.append(new_food)
     return food_list
 
